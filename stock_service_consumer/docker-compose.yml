@@ -1,0 +1,22 @@
+version: "3"
+services:
+    stock-service-consumer:
+        build:
+            context: .
+            dockerfile: Dockerfile.dev
+        volumes:
+            - ./:/home/app
+        environment:
+            - RESOURCE_DEBUG=micro
+        networks:
+            - server_network
+            - database_network
+            - rabbitmq_network
+
+networks:
+    server_network:
+        driver: bridge
+    database_network:
+        name: stock_service_database_server_network
+    rabbitmq_network:
+        name: rabbitmq_server_network

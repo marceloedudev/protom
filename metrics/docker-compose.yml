@@ -1,0 +1,37 @@
+version: "3"
+services:
+    grafana:
+        container_name: grafana_container
+        image: grafana/grafana
+        environment:
+            - GF_SECURITY_ADMIN_USER=admin
+            - GF_SECURITY_ADMIN_PASSWORD=password123
+            - GF_USERS_ALLOW_SIGN_UP=false
+        restart: unless-stopped
+        ports:
+            - 3000:3000
+        networks:
+            - server_network
+
+    jaeger:
+        container_name: "jaeger"
+        image: jaegertracing/all-in-one:1.11
+        ports:
+            - "5775:5775/udp"
+            - "6831:6831/udp"
+            - "6832:6832/udp"
+            - "5778:5778/tcp"
+            - "16686:16686"
+            - "14268:14268"
+            - "9411:9411"
+        restart: on-failure
+        environment:
+            - LOG_LEVEL=debug
+        labels:
+            NAME: "jaeger-agent"
+        networks:
+            - server_network
+
+networks:
+    server_network:
+        driver: bridge

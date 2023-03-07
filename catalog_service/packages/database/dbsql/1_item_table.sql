@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS item(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    description VARCHAR (128) UNIQUE NOT NULL,
+    price INTEGER NULL,
+    width INTEGER NULL,
+    height INTEGER NULL,
+    length INTEGER NULL,
+    weight INTEGER NULL,
+    volume INTEGER NULL,
+    density INTEGER NULL,
+    uuid VARCHAR UNIQUE NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
+);

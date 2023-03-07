@@ -1,0 +1,46 @@
+package com.github.marceloedudev.stockserviceconsumer.unit.domain.entity;
+
+import com.github.marceloedudev.stockserviceconsumer.domain.entity.StockEntry;
+import com.github.marceloedudev.stockserviceconsumer.domain.entity.StockExit;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+@ExtendWith(SpringExtension.class)
+@ActiveProfiles("test")
+public class StockEntryTest {
+
+    @Test
+    @DisplayName("should return error with empty list of items")
+    public void stockEmpty() {
+        StockEntry stockEntry = new StockEntry();
+        stockEntry.setUuid("197b0cb4-b1ed-4710-8b0b-5a700b334895");
+        stockEntry.validate();
+        Assertions.assertEquals(1, stockEntry.getNotifications().size());
+    }
+
+    @Test
+    @DisplayName("should return error with invalid list of items")
+    public void stockInvalidItem() {
+        StockEntry stockEntry = new StockEntry();
+        stockEntry.setUuid("197b0cb4-b1ed-4710-8b0b-5a700b334895");
+        var item = stockEntry.addItem(0L, 0, 300.4, "8b0b-5a700b334895-197b0cb4-b1ed-4710");
+        item.validate();
+        stockEntry.validate();
+        Assertions.assertEquals(2, item.getNotifications().size());
+    }
+
+    @Test
+    @DisplayName("should not return error")
+    public void stockValid() {
+        StockEntry stockEntry = new StockEntry();
+        stockEntry.setUuid("197b0cb4-b1ed-4710-8b0b-5a700b334895");
+        stockEntry.addItem(2L, 10, 300.4, "8b0b-5a700b334895-197b0cb4-b1ed-4710");
+        stockEntry.validate();
+        Assertions.assertEquals(0, stockEntry.getNotifications().size());
+    }
+
+}

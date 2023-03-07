@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "baseUrl": "src",
+        "lib": ["es5", "es6", "es2015", "es7", "es2016", "es2017"],
+        "target": "es2017",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "outDir": "./build",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "sourceMap": true,
+        "strict": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "noImplicitAny": false,
+        "noImplicitThis": false,
+        "typeRoots": ["./src/@types", "node_modules/@types"]
+    },
+    "exclude": ["node_modules"],
+    "extends": "./tsconfig.paths.json",
+    "ts-node": {
+        "require": ["tsconfig-paths/register"],
+        "files": true
+    }
+}

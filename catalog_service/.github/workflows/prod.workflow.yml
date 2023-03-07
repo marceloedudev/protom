@@ -1,0 +1,42 @@
+name: CI/CD Pipeline - Master Workflow - Build and deploy to production
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  continuous-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Golang
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.19.5'
+      
+      - name: Verify dependencies
+        run: go mod verify
+
+      - name: Run build
+        run: go build ./cmd/Main.go 
+
+      - name: Run go vet
+        run: go vet ./...
+
+      - name: Run tests
+        run: go test -race -vet=off ./...
+  continuous-deployment:
+    runs-on: ubuntu-latest
+    needs: [continuous-integration]
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.PAT_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: 'marceloedudev',
+              repo: 'deployments',
+              workflow_id: 'main.workflow.yml',
+              ref: 'master'
+            })

@@ -1,0 +1,48 @@
+version: "3"
+services:
+    order-service-producer:
+        build:
+            context: .
+            dockerfile: Dockerfile.dev
+        restart: unless-stopped
+        volumes:
+            - ./:/home/app
+        ports:
+            - "8080:8080"
+        environment:
+            - RESOURCE_DEBUG=micro
+        networks:
+            - server_network
+            - database_network
+            - rabbitmq_network
+            - metrics_network
+            - auth_service_network
+
+    prometheus:
+        image: prom/prometheus
+        volumes:
+            - ./docker/monitoring/prometheus-local.yml:/etc/prometheus/prometheus.yml:Z
+        command:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+            - "--storage.tsdb.path=/prometheus"
+            - "--storage.tsdb.retention=20d"
+            - "--web.console.libraries=/usr/share/prometheus/console_libraries"
+            - "--web.console.templates=/usr/share/prometheus/consoles"
+        ports:
+            - 9091:9090
+        depends_on:
+            - order-service-producer
+        networks:
+            - server_network
+
+networks:
+    server_network:
+        driver: bridge
+    database_network:
+        name: order_service_database_server_network
+    rabbitmq_network:
+        name: rabbitmq_server_network
+    metrics_network:
+        name: metrics_server_network
+    auth_service_network:
+        name: auth_service_server_network

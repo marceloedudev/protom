@@ -1,0 +1,19 @@
+.idea/
+#.vscode/
+node_modules/
+build/
+tmp/
+temp/
+logs/
+
+# asyncapi doc
+asyncapi/
+
+# docker data
+.docker/
+
+# tests
+database.sqlite
+
+# stress test
+report.html

@@ -1,0 +1,22 @@
+name: CI Pipeline - Dev Workflow - Test and check thing
+on:
+  push:
+    branches: [develop]
+
+jobs:
+  continuous-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+      - name: Build with Maven
+        run: mvn -X -e -B install -DskipTests --file pom.xml 
+      - name: Run unit tests
+        run: mvn -Dtest=*/unit/** test
+      - name: Run integration tests
+        run: mvn -Dtest=*/integration/** test
+      - name: Run e2e tests
+        run: mvn -Dtest=*/e2e/** test

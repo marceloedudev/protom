@@ -1,0 +1,22 @@
+FROM golang:1.19.5
+
+ENV PATH="$PATH:/bin/bash"
+
+ENV CGO_ENABLED=1
+
+WORKDIR /go/src
+
+ENV PATH="/go/bin:${PATH}"
+
+RUN apt-get update && \
+    apt-get install build-essential protobuf-compiler librdkafka-dev -y
+
+COPY ./ /go/src
+
+RUN go mod download
+
+RUN go get github.com/githubnemo/CompileDaemon
+
+RUN go install github.com/githubnemo/CompileDaemon
+
+ENTRYPOINT CompileDaemon --build="go build cmd/Main.go" --command=./Main

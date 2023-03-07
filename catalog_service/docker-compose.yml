@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+    catalog-service:
+        build:
+            context: ./
+            dockerfile: Dockerfile.dev
+        restart: always
+        ports:
+            - 5000:5000
+        volumes:
+            - ./:/go/src
+        networks:
+            - server_network
+            - database_network
+            - auth_service_network
+
+networks:
+    server_network:
+        driver: bridge
+    database_network:
+        name: order_service_database_server_network
+    auth_service_network:
+        name: auth_service_server_network

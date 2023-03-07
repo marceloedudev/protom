@@ -1,0 +1,142 @@
+basePath: /catalog/v1
+definitions:
+  infradto.CreateItemRequest:
+    properties:
+      density:
+        example: 87
+        type: integer
+      description:
+        example: Mouse
+        type: string
+      height:
+        example: 22
+        type: integer
+      length:
+        example: 14
+        type: integer
+      price:
+        example: 301.5
+        type: number
+      volume:
+        example: 86
+        type: integer
+      weight:
+        example: 15
+        type: integer
+      width:
+        example: 32
+        type: integer
+    type: object
+  infradto.CreateItemResponse:
+    properties:
+      density:
+        example: 87
+        type: integer
+      description:
+        example: Mouse
+        type: string
+      height:
+        example: 22
+        type: integer
+      length:
+        example: 14
+        type: integer
+      price:
+        example: 301.5
+        type: number
+      uuid:
+        example: d65010c3-f49b-44f1-b7ae-de0da2ffb732
+        type: string
+      volume:
+        example: 86
+        type: integer
+      weight:
+        example: 15
+        type: integer
+      width:
+        example: 32
+        type: integer
+    type: object
+  infradto.ListItemsResponse:
+    properties:
+      density:
+        example: 87
+        type: integer
+      description:
+        example: Mouse
+        type: string
+      height:
+        example: 22
+        type: integer
+      length:
+        example: 14
+        type: integer
+      price:
+        example: 301.5
+        type: number
+      uuid:
+        example: d65010c3-f49b-44f1-b7ae-de0da2ffb732
+        type: string
+      volume:
+        example: 86
+        type: integer
+      weight:
+        example: 15
+        type: integer
+      width:
+        example: 32
+        type: integer
+    type: object
+host: localhost:5000
+info:
+  contact: {}
+  description: This is a basic API using Gin.
+  title: Catalog Service
+  version: "1.0"
+paths:
+  /catalog/v1/:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - default: Bearer 508afb69-1bf0-45bc-afcc-be93d1f7ab6a
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/infradto.ListItemsResponse'
+            type: array
+      summary: List Items
+      tags:
+      - items
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - default: Bearer 508afb69-1bf0-45bc-afcc-be93d1f7ab6a
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Data item
+        in: body
+        name: item
+        required: true
+        schema:
+          $ref: '#/definitions/infradto.CreateItemRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/infradto.CreateItemResponse'
+      summary: Create Item
+      tags:
+      - items
+swagger: "2.0"

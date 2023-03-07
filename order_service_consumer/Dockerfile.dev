@@ -1,0 +1,10 @@
+FROM maven:3.8.6-openjdk-18-slim
+
+WORKDIR /home/app
+
+COPY ./pom.xml ./pom.xml
+
+COPY ./src ./src
+
+#CMD ["./mvnw", "compile", "quarkus:dev", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.package.type=mutable-jar", "-Dquarkus.profile=dev"]
+CMD ["mvn", "clean", "compile", "quarkus:dev", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.package.type=mutable-jar", "-Dquarkus.profile=dev"]

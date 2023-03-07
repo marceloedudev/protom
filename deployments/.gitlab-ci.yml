@@ -1,0 +1,10 @@
+stages:
+  - deploy
+
+deploy:
+  only:
+    - master
+    - external
+  stage: deploy
+  script: 
+    - echo "hello world"

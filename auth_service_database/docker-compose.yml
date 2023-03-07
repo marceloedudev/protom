@@ -1,0 +1,39 @@
+version: "3"
+services:
+    auth-postgresdb:
+        image: postgres:13-alpine
+        container_name: "auth-postgresdb"
+        restart: always
+        ports:
+            - 5434:5432
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=password123
+            - POSTGRES_DB=nodedb
+        networks:
+            - server_network
+
+    redis:
+        image: redis:7.0.2-alpine
+        restart: always
+        ports:
+            - "6379:6379"
+        volumes:
+            - .docker/redisdata:/data
+        networks:
+            - server_network
+
+    mongo:
+        image: mongo
+        restart: unless-stopped
+        ports:
+            - 27017:27017
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME=master
+            - MONGO_INITDB_ROOT_PASSWORD=password123
+        networks:
+            - server_network
+
+networks:
+    server_network:
+        driver: bridge

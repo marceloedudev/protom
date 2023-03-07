@@ -1,0 +1,29 @@
+version: "3"
+services:
+  auth-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
+    tty: true
+    ports:
+      - 4000:4000
+    command: npm run dev
+    volumes:
+      - ./:/home/node/app
+      - node_modules:/home/node/app/node_modules
+    networks:
+      - server_network
+      - database_network
+      - rabbitmq_network
+
+volumes:
+  node_modules:
+
+networks:
+  server_network:
+    driver: bridge
+  database_network:
+    name: auth_service_database_server_network
+  rabbitmq_network:
+    name: rabbitmq_server_network

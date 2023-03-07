@@ -1,0 +1,27 @@
+name: CI Pipeline - Dev Workflow - Test and check thing
+on:
+  push:
+    branches: [develop]
+
+jobs:
+  continuous-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Golang
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.19.5'
+      
+      - name: Verify dependencies
+        run: go mod verify
+
+      - name: Run build
+        run: go build ./cmd/Main.go 
+
+      - name: Run go vet
+        run: go vet ./...
+
+      - name: Run tests
+        run: go test -race -vet=off ./...

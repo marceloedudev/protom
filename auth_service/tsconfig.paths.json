@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "paths": {
+            "@/application/*": ["application/*"],
+            "@/boot/*": ["boot/*"],
+            "@/config/*": ["config/*"],
+            "@/data/*": ["data/*"],
+            "@/docs/*": ["docs/*"],
+            "@/domain/*": ["domain/*"],
+            "@/cmd/*": ["cmd/*"],
+            "@/infra/*": ["infra/*"],
+            "@/packages/*": ["packages/*"],
+            "@/models/*": ["models/*"]
+        }
+    }
+}

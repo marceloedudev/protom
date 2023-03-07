@@ -1,0 +1,73 @@
+image: openjdk:17
+
+variables:
+  MY_TRIGGER_TOKEN: $MY_TRIGGER_TOKEN
+
+stages:
+  - build
+  - test
+  - deploy
+
+.only-base: &only-base
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop" || ($CI_PIPELINE_SOURCE == 'merge_request_event' && ( $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master" ))
+
+.only-production: &only-production
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"
+
+compile:
+  <<: *only-base
+  stage: build
+  before_script:
+    - chmod +x ./mvnw
+  script:
+    - ./mvnw -X -e -B install -DskipTests --file pom.xml 
+
+test_unit:
+  <<: *only-base
+  stage: test
+  needs:
+    - compile
+  before_script:
+    - chmod +x ./mvnw
+  script:
+    - ./mvnw -Dtest=*/unit/** test
+
+test_integration:
+  <<: *only-base
+  stage: test
+  needs:
+    - test_unit
+  before_script:
+    - chmod +x ./mvnw
+  script:
+    - ./mvnw -Dtest=*/integration/** test
+
+test_e2e:
+  <<: *only-base
+  stage: test
+  needs:
+    - test_integration
+  before_script:
+    - chmod +x ./mvnw
+  script:
+    - ./mvnw -Dtest=*/e2e/** test
+
+publish:
+  <<: *only-production
+  stage: deploy
+  needs:
+    - test_e2e
+  script:
+    - echo "Build and push image to Amazon ECR"
+  environment: production
+
+deploy:
+  <<: *only-production
+  stage: deploy
+  needs:
+    - publish
+  script:
+    - 'curl -X POST --fail -F token=$MY_TRIGGER_TOKEN -F ref=master "https://gitlab.com/api/v4/projects/43580268/trigger/pipeline"'
+  environment: production
